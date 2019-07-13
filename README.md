@@ -24,3 +24,6 @@ Use PEP8 style for Python code and Prettier for HTML, CSS and JavaScript. <br>
 # General Rules and Instructions
 1. If at any point of time, a participant tries to copy other participants' submission, it will lead to immediate disqualification of the participant from the event.
 2. The first submission of each task will be awarded more bonus points than those awarded to the subsequent submissions. The only exception to this rule would be if the non-first submission is a really high-quality submission, in that case the same amount of points as the first one will be awarded to that participant.
+
+
+More details are available at https://docs.google.com/document/d/10sV36zfKDqhW0Cg1Yx9CKTsq75WoDiuf5BIBKE4Dla4/edit?fbclid=IwAR0l7oT7c7UL6kCY7ahzwQOPEZsdc9grYRb5kQYYxA9KyFBfSlBIbWZx11U.
