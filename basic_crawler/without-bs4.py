@@ -17,6 +17,10 @@ class Crawler:
         title = re.findall(r'<title>(.*?)</title>', str(data))
         links = re.findall(r'<a href="(.*?)"', str(data))
 
+        for link in links:
+            if link.startswith('mailto:') or link.startswith('tel:'):
+                links.remove(link)
+
         return title[0], links, current_time
 
 
