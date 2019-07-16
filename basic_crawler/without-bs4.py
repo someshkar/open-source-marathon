@@ -8,31 +8,46 @@ class Crawler:
         self.url = url
 
     def crawl(self):
+        links_and_data = []
         r = requests.get(self.url)
-        data = r.content
+        main_source = r.content
 
         now = datetime.now()
         current_time = now.strftime('%H:%M:%S')
 
-        title = re.findall(r'<title>(.*?)</title>', str(data))
-        links = re.findall(r'<a href="(.*?)"', str(data))
+        title = re.findall(r'<title>(.*?)</title>', str(main_source))[0]
+        links = re.findall(r'<a href="(.*?)"', str(main_source))
 
         for link in links:
-            if link.startswith('mailto:') or link.startswith('tel:'):
-                links.remove(link)
+            if link.startswith('mailto:') or link.startswith('tel:') \
+               or link.startswith('#'):
+                continue
+            r = requests.get(link)
+            source = r.content
+            link_data = {
+                'title': title,
+                'link': link,
+                'source_code': source,
+            }
 
-        return title[0], links, current_time, data
+            print('Found URL {} with title {}'.format(
+                link_data['link'], link_data['title']))
+
+            links_and_data.append(link_data)
+
+        return title, links_and_data, current_time, main_source
 
 
 # URL to crawl
-URL = 'https://stallman.org'
+URL = 'https://techcrunch.com'
 
 c = Crawler(URL)
-title, links, current_time, source_code = c.crawl()
+title, links_and_data, current_time, source_code = c.crawl()
 
 print('Title: {}'.format(title))
 
-for link in links:
-    print('Found URL: {} at {}'.format(link, current_time))
+for link in links_and_data:
+    print('Found URL: {} with title {} at {}'.format(
+        link['link'], link['title'], current_time))
 
-print('\nComplete source code: {}'.format(source_code))
+print('\nComplete source code of the start document: {}'.format(source_code))
