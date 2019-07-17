@@ -17,3 +17,6 @@ p = Parser(links_and_data)
 links_with_words = p.parse()
 
 i = Indexer(links_with_words)
+inverted_index = i.index()
+
+print(inverted_index)
