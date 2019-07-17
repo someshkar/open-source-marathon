@@ -1,6 +1,5 @@
 from crawler import Crawler
 from parser import Parser
-from indexer import Indexer
 
 # URL to crawl
 URL = 'https://techcrunch.com'
@@ -15,6 +14,3 @@ print('Title: {}\n'.format(title))
 
 p = Parser(links_and_data)
 links_with_words = p.parse()
-
-i = Indexer(links_with_words)
-i.index()

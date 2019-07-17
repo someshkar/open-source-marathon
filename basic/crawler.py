@@ -34,10 +34,21 @@ class Crawler:
                         if instruction in link:
                             links.remove(link)
 
+        domain_hits = {}
+
         for link in links:
+
             if link.startswith('mailto:') or link.startswith('tel:') \
                or link.startswith('#'):
                 continue
+
+            domain = str(re.findall(r'://(.*?)/', link)[0])
+
+            if domain_hits.get(domain, None) is not None:
+                domain_hits[domain] = domain_hits[domain] + 1
+            else:
+                domain_hits[domain] = 1
+
             r = requests.get(link)
             source = r.content
             link_data = {
@@ -52,6 +63,8 @@ class Crawler:
 
             links_and_data.append(link_data)
 
-            # time.sleep(random.randint(1, 5))
+            if domain_hits[domain] > 5:
+                time.sleep(random.randint(1, 5))
+                domain_hits[domain] = 0
 
         return title, links_and_data, current_time, main_source
