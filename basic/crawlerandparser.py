@@ -8,35 +8,48 @@ class Crawler:
         self.url = url
 
     def crawl(self):
+        links_and_data = []
         r = requests.get(self.url)
-        data = r.content
+        main_source = r.content
 
         now = datetime.now()
         current_time = now.strftime('%H:%M:%S')
 
-        title = re.findall(r'<title>(.*?)</title>', str(data))
-        links = re.findall(r'<a href="(.*?)"', str(data))
+        title = re.findall(r'<title>(.*?)</title>', str(main_source))[0]
+        links = re.findall(r'<a href="(.*?)"', str(main_source))
 
         for link in links:
-            if link.startswith('mailto:') or link.startswith('tel:'):
-                links.remove(link)
+            if link.startswith('mailto:') or link.startswith('tel:') \
+               or link.startswith('#'):
+                continue
+            r = requests.get(link)
+            source = r.content
+            link_data = {
+                'title': title,
+                'link': link,
+                'source_code': source,
+                'words': []
+            }
 
-        return title[0], links, current_time, data
+            print('Found URL: {} with Title: {}'.format(
+                link_data['link'], link_data['title']))
+
+            links_and_data.append(link_data)
+
+        return title, links_and_data, current_time, main_source
 
 
 class Parser:
-    def __init__(self, links):
-        self.links = links
+    def __init__(self, links_and_data):
+        self.links_and_data = links_and_data
 
     def parse(self):
-        links_with_words = {}
-        for link in self.links:
-            r = requests.get(link)
-            source = r.content
-
-            title = re.findall(r'<title>(.*?)</title>', str(source))[0]
+        for link in self.links_and_data:
+            title = re.findall(r'<title>(.*?)</title>',
+                               str(link['source_code']))[0]
             meta_description = re.findall(
-                r'<meta name="description" content="(.*?)"', str(source))[0]
+                r'<meta name="description" content="(.*?)"',
+                str(link['source_code']))[0]
 
             if meta_description is not None:
                 def removeSpecialChars(s): return re.sub(
@@ -47,24 +60,24 @@ class Parser:
 
                 words = title.split() + meta_description.split()
 
-                print('found {} at {}'.format(words, link))
+                for linkk in range(len(words)):
+                    link['words'].append(words[linkk])
 
-                links_with_words[link] = words
+                print('Found {} at {}\n'.format(link['words'], link['link']))
 
-        return links_with_words
+        return self.links_and_data
 
 
 # URL to crawl
 URL = 'https://techcrunch.com'
 
 c = Crawler(URL)
-title, links, current_time, _ = c.crawl()
+title, links_and_data, current_time, main_source = c.crawl()
 
-print('Title: {}'.format(title))
+print('Title: {}\n'.format(title))
 
-for link in links:
-    print('Found URL: {} at {}'.format(link, current_time))
+# for link in links:
+#     print('Found URL: {} at {}'.format(link, current_time))
 
-
-p = Parser(links)
+p = Parser(links_and_data)
 links_with_words = p.parse()
