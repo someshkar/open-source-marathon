@@ -2,6 +2,7 @@ from crawler import Crawler
 from parser import Parser
 from indexer import Indexer
 from pprint import PrettyPrinter
+import json
 
 # URL to crawl
 URL = 'https://techcrunch.com'
@@ -22,3 +23,6 @@ inverted_index = i.index()
 
 pp = PrettyPrinter(indent=4)
 pp.pprint(inverted_index)
+
+with open('db.json', 'w') as json_file:
+    json.dump(inverted_index, json_file)
