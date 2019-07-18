@@ -69,8 +69,8 @@ class Crawler:
 
             links_and_data.append(link_data)
 
-            # if domain_hits[domain] > 5:
-            #     time.sleep(random.randint(1, 5))
-            #     domain_hits[domain] = 0
+            if domain_hits[domain] > 5:
+                time.sleep(random.randint(1, 5))
+                domain_hits[domain] = 0
 
         return title, links_and_data, current_time, main_source
