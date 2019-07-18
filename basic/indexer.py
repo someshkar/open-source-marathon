@@ -46,4 +46,4 @@ class Indexer:
                             elif inverted_index.get(word, None) is None:
                                 inverted_index[word] = [i]
 
-        return inverted_index
+        return inverted_index, original_words
