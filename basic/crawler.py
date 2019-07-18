@@ -69,7 +69,7 @@ class Crawler:
 
             links_and_data.append(link_data)
 
-            if domain_hits[domain] >= 5:
+            if domain_hits[domain] >= 1000:
                 time.sleep(random.randint(1, 5))
                 domain_hits[domain] = 0
 

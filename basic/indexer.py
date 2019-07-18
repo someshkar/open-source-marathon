@@ -1,5 +1,6 @@
 import re
-
+import nltk
+from nltk.corpus import wordnet
 
 common_words = ['the', 'of', 'a', 'that', 'will', 'was', 'their',
                 'those', 'these', 'why', 'whether',
@@ -28,5 +29,21 @@ class Indexer:
                         inverted_index[word].append(i)
                     elif inverted_index.get(word, None) is None:
                         inverted_index[word] = [i]
+
+        for word in original_words:
+            synonyms = []
+
+            for syn in wordnet.synsets(word):
+                for l in syn.lemmas():
+                    synonyms.append(l.name())
+
+            for synonym in synonyms:
+                for i in range(len(self.links_with_words)):
+                    for word in self.links_with_words[i]['words']:
+                        if synonym.lower() == word.lower():
+                            if inverted_index.get(word, None) is not None:
+                                inverted_index[word].append(i)
+                            elif inverted_index.get(word, None) is None:
+                                inverted_index[word] = [i]
 
         return inverted_index
