@@ -1,7 +1,10 @@
 import re
 
 
-common_words = ['the', 'of', 'a']
+common_words = ['the', 'of', 'a', 'that', 'will', 'was', 'their',
+                'those', 'these', 'why', 'whether',
+                'when', 'then', 'to', 'or', 'on', 'its', 'it', 'is',
+                'in', 'has', 'for', 'and', 'an', 'a', 'The', 'the', 'with']
 
 
 class Indexer:

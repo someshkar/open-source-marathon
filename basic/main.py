@@ -1,6 +1,7 @@
 from crawler import Crawler
 from parser import Parser
 from indexer import Indexer
+from pprint import PrettyPrinter
 
 # URL to crawl
 URL = 'https://techcrunch.com'
@@ -19,4 +20,5 @@ links_with_words = p.parse()
 i = Indexer(links_with_words)
 inverted_index = i.index()
 
-print(inverted_index)
+pp = PrettyPrinter(indent=4)
+pp.pprint(inverted_index)
